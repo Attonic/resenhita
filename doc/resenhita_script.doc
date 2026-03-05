@@ -1,0 +1,50 @@
+-- Habilita extensão para UUID
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+-- Enum para Categorias
+CREATE TYPE categoria_resenha AS ENUM ('LIVRO', 'FILME', 'SERIE', 'GAME');
+
+-- Tabela de Usuários
+CREATE TABLE usuarios (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    nome VARCHAR(100) NOT NULL,
+    biografia VARCHAR(500),
+    link_social_1 VARCHAR(255),
+    link_social_2 VARCHAR(255),
+    link_social_3 VARCHAR(255),
+    email VARCHAR(150) UNIQUE NOT NULL,
+    senha VARCHAR(255) NOT NULL,
+    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Tabela de Resenhas
+CREATE TABLE resenhas (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    usuario_id UUID NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+    titulo_resenha VARCHAR(150) NOT NULL,
+    nome_obra VARCHAR(150) NOT NULL,
+    conteudo VARCHAR(500) NOT NULL,
+    categoria categoria_resenha NOT NULL,
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Tabela de Votos (Regra: 1 por perfil)
+CREATE TABLE votos (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    usuario_id UUID NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+    resenha_id UUID NOT NULL REFERENCES resenhas(id) ON DELETE CASCADE,
+    CONSTRAINT unique_voto_usuario_resenha UNIQUE (usuario_id, resenha_id)
+);
+
+-- Tabela de Seguidores (Relacionamento Many-to-Many recursivo)
+CREATE TABLE seguidores (
+    seguidor_id UUID NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+    seguido_id UUID NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+    data_follow TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (seguidor_id, seguido_id),
+    CONSTRAINT chk_nao_seguir_si_mesmo CHECK (seguidor_id <> seguido_id)
+);
+
+-- Índices de Performance
+CREATE INDEX idx_resenhas_usuario_mes ON resenhas (usuario_id, data_criacao);
+CREATE INDEX idx_seguidores_seguido ON seguidores (seguido_id);
