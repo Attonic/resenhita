@@ -16,4 +16,6 @@ public interface UsuarioMapper {
     @Mapping(target = "id", ignore = true)
     void atualizarEntidadeDoDto(UsuarioDto usuarioDto, @MappingTarget Usuario usuario);
 
+    //mapper corrigido
+
 }
