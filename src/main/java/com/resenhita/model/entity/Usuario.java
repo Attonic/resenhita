@@ -49,7 +49,4 @@ public class Usuario {
     @Column(name = "data_cadastro", updatable = false, nullable = false)
     @CreationTimestamp
     private LocalDateTime dataCadastro;
-
-
-
 }
