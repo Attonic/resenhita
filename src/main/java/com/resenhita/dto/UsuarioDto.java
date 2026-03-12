@@ -45,7 +45,4 @@ public class UsuarioDto {
     @NotBlank(groups = {UsuarioView.UsuarioPost.class, UsuarioView.UsuarioPut.class},
             message = "Senha não pode ser vazio.")
     private String senha;
-
-
-
 }
