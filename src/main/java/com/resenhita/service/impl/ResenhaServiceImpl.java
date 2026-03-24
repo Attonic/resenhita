@@ -3,6 +3,7 @@ package com.resenhita.service.impl;
 import com.resenhita.dto.ResenhaDto;
 import com.resenhita.mapper.ResenhaMapper;
 import com.resenhita.repository.ResenhaRepository;
+import com.resenhita.repository.UsuarioRepository;
 import com.resenhita.service.ResenhaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,11 +18,15 @@ import java.time.YearMonth;
 @RequiredArgsConstructor
 public class ResenhaServiceImpl implements ResenhaService {
 
+    private final UsuarioRepository usuarioRepository;
     private final ResenhaRepository resenhaRepository;
     private final ResenhaMapper resenhaMapper;
 
     @Override
     public ResenhaDto saveResenha(ResenhaDto resenhaDto) {
+        usuarioRepository.findById(resenhaDto.getIdUsuario())
+                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));
+
         YearMonth mesAtual =  YearMonth.now();
         LocalDateTime inicioDoMes = mesAtual.atDay(1).atStartOfDay();
         LocalDateTime fimDoMes = mesAtual.atEndOfMonth().atTime(LocalTime.MAX);
