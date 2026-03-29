@@ -2,6 +2,7 @@ package com.resenhita.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.resenhita.dto.ResenhaDto;
+import com.resenhita.dto.UsuarioDto;
 import com.resenhita.service.ResenhaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -11,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,5 +37,20 @@ public class ResenhaController {
     public ResponseEntity<Page<ResenhaDto>> findAllResenhas(@PageableDefault(size = 10) Pageable pageable) {
         var resenhas = resenhaService.findAllResenhas(pageable);
         return ResponseEntity.status(HttpStatus.OK).body(resenhas);
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<ResenhaDto> findResenhaById(@PathVariable UUID id) {
+        var resenha = resenhaService.findResenhaById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(resenha);
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<ResenhaDto> updateResenha(@PathVariable UUID id,
+                                                    @RequestBody @Validated(ResenhaDto.ResenhaView.ResenhaPut.class)
+                                                    @JsonView(ResenhaDto.ResenhaView.ResenhaPut.class) ResenhaDto resenhaDto) {
+
+        var resenha = resenhaService.updateResenha(resenhaDto, id);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(resenha);
     }
 }
