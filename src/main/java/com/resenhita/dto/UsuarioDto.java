@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-
-import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -18,6 +18,9 @@ public class UsuarioDto {
         public static interface UsuarioPut{}
         public static interface UsuarioPost{}
     }
+
+    @JsonView({UsuarioView.UsuarioPost.class, UsuarioView.UsuarioPut.class})
+    private UUID id;
 
     @JsonView({UsuarioView.UsuarioPost.class, UsuarioView.UsuarioPut.class})
     @NotBlank(groups = {UsuarioView.UsuarioPost.class, UsuarioView.UsuarioPut.class},
