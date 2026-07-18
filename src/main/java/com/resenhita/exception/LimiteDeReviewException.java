@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 
+//422
 @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
 @Getter
 public class LimiteDeReviewException extends RuntimeException{

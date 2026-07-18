@@ -1,6 +1,7 @@
 package com.resenhita.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.resenhita.controller.documentation.IResenhaControllerDoc;
 import com.resenhita.dto.ResenhaDto;
 import com.resenhita.dto.UsuarioDto;
 import com.resenhita.service.ResenhaService;
@@ -18,7 +19,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/resenhas")
-public class ResenhaController {
+public class ResenhaController implements IResenhaControllerDoc {
 
     private final ResenhaService resenhaService;
 
