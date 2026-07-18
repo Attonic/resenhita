@@ -1,6 +1,8 @@
 package com.resenhita.service.impl;
 
 import com.resenhita.dto.UsuarioDto;
+import com.resenhita.exception.ConflitoException;
+import com.resenhita.exception.RecursoEncontradoException;
 import com.resenhita.mapper.UsuarioMapper;
 import com.resenhita.model.entity.Usuario;
 import com.resenhita.repository.UsuarioRepository;
@@ -24,7 +26,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public UsuarioDto buscarPorId(UUID id) {
         var usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
+                .orElseThrow(() -> new RecursoEncontradoException("Usuário não encontrado"));
 
         return usuarioMapper.deEntidadeParaDto(usuario);
     }
@@ -39,7 +41,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     public UsuarioDto salvar(UsuarioDto usuarioDto) {
 
         if (usuarioRepository.existsByEmail(usuarioDto.getEmail())){
-            throw new DataIntegrityViolationException("Email já existe");
+            throw new ConflitoException("Email já existe");
         }
 
         Usuario usuario = usuarioMapper.deDtoParaEntidade(usuarioDto);
@@ -52,10 +54,10 @@ public class UsuarioServiceImpl implements UsuarioService {
     public UsuarioDto atualizar(UsuarioDto usuarioDto, UUID id) {
 
         Usuario usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Usuario não encotrado"));
+                .orElseThrow(() -> new RecursoEncontradoException("Usuario não encotrado"));
 
         if (usuarioRepository.existsByEmailAndIdNot(usuarioDto.getEmail(), id)){
-            throw new DataIntegrityViolationException("Email já existe");
+            throw new ConflitoException("Email já existe");
         }
 
         usuarioMapper.atualizarEntidadeDoDto(usuarioDto, usuario);
