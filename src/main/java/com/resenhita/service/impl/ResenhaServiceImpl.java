@@ -1,6 +1,9 @@
 package com.resenhita.service.impl;
 
 import com.resenhita.dto.ResenhaDto;
+import com.resenhita.exception.LimiteDeReviewException;
+import com.resenhita.exception.NaoAutorizadoException;
+import com.resenhita.exception.RecursoEncontradoException;
 import com.resenhita.mapper.ResenhaMapper;
 import com.resenhita.model.entity.Resenha;
 import com.resenhita.repository.ResenhaRepository;
@@ -28,7 +31,7 @@ public class ResenhaServiceImpl implements ResenhaService {
     @Override
     public ResenhaDto saveResenha(ResenhaDto resenhaDto) {
         var usuario = usuarioRepository.findById(resenhaDto.getIdUsuario())
-                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));
+                .orElseThrow(() -> new NaoAutorizadoException("Usuário não encontrado."));
 
         YearMonth mesAtual =  YearMonth.now();
         LocalDateTime inicioDoMes = mesAtual.atDay(1).atStartOfDay();
@@ -41,7 +44,7 @@ public class ResenhaServiceImpl implements ResenhaService {
         );
 
         if (limiteTotal >= 15) {
-            throw new IllegalArgumentException("Você atingiu o limite máximo de 15 resenhas na sua conta.");
+            throw new LimiteDeReviewException("Você atingiu o limite máximo de 15 resenhas na sua conta.");
         }
 
         var resenha = resenhaMapper.deDtoParaEntidade(resenhaDto);
@@ -62,7 +65,7 @@ public class ResenhaServiceImpl implements ResenhaService {
     @Override
     public ResenhaDto updateResenha(ResenhaDto resenhaDto, UUID id) {
         Resenha resenha = resenhaRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Não encontrada."));
+                .orElseThrow(() -> new RecursoEncontradoException("Não encontrada."));
 
         resenhaMapper.atualizarEntidadeDoDto(resenhaDto, resenha);
         Resenha resenhaAtualizado = resenhaRepository.save(resenha);
@@ -72,7 +75,7 @@ public class ResenhaServiceImpl implements ResenhaService {
     @Override
     public ResenhaDto findResenhaById(UUID id) {
         var resenha = resenhaRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Não encontrada."));
+                .orElseThrow(() -> new RecursoEncontradoException("Não encontrada."));
         return resenhaMapper.deEntidadeParaDto(resenha);
     }
 }
