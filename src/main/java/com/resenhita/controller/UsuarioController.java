@@ -1,6 +1,7 @@
 package com.resenhita.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.resenhita.controller.documentation.IUsuarioControllerDoc;
 import com.resenhita.dto.UsuarioDto;
 import com.resenhita.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/usuarios")
-public class UsuarioController {
+public class UsuarioController implements IUsuarioControllerDoc {
 
     private final UsuarioService usuarioService;
 
