@@ -9,11 +9,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@RestController
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     // 409
@@ -31,7 +32,7 @@ public class GlobalExceptionHandler {
     // 404
     @ExceptionHandler(RecursoEncontradoException.class)
     public ResponseEntity<ErroResponse> handlerRecursoNaoEncontrado(RecursoEncontradoException e, HttpServletRequest requeste){
-        return buildRespon(HttpStatus.FORBIDDEN, e.getMessage(), e.getMessages(), requeste);
+        return buildRespon(HttpStatus.NOT_FOUND, e.getMessage(), e.getMessages(), requeste);
     }
 
     //401
